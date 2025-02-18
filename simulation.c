@@ -6,54 +6,71 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 10:45:07 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/18 12:01:17 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/18 16:55:29 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	init_threads(t_philo **philo, char *av[])
+void	*test(void *thread)
+{
+	t_philo *philo = (t_philo *)thread;
+	int i = 0;
+	if (philo->data->nb_of_meal != 0)
+	{
+		while(i < philo->data->nb_of_meal)
+		{
+			printf("Philosophe %d a commencé !\n", philo->id);
+			i++;
+		}
+	}
+	return (NULL);
+}
+
+static int	init_threads(t_philo *philo, t_data *data)
 {
 	int	i;
 
 	i = 0;
-	(*philo)->threads = malloc(sizeof(pthread_t) * (ft_atoi(av[1])));
-	if (!(*philo)->threads)
+	while (i < data->nb_of_philo)
 	{
-		ft_free(philo);
-		return (0);
-	}
-	while (i < ft_atoi(av[1]))
-	{
-		pthread_create(&(*philo)->threads[i], NULL, , NULL);
+		philo[i].id = i;
+		philo[i].data = data;
+		if (pthread_create(&philo[i].threads, NULL, test, &philo[i]) != 0)
+			return (0);
+		philo[i].last_eat = 0;
 		i++;
 	}
+
+	for (int i = 0; i < philo->data->nb_of_philo; i++)
+		pthread_join(philo[i].threads, NULL);
+	ft_free(&philo, &data);
 	return (1);
 }
 
-static void	init_stack(t_philo **philo, char *av[], int ac)
-{
-	(*philo) = malloc(sizeof(t_philo));
-	if (!(*philo))
-		return ;
-	if (init_threads(philo, av) != 0)
+void	init_stack(char *av[], int ac)
+{	
+	t_philo	*philo;
+	t_data	*data;
+
+	philo = malloc(sizeof(t_philo) * (ft_atoi(av[1])));
+	data = malloc(sizeof(t_data));
+	if (!philo || !data)
 	{
-		ft_free(philo);
+		ft_free(&philo, &data);
 		return ;
 	}
-	(*philo)->time_to_eat = ft_atoi(av[4]);
-	(*philo)->time_to_sleep = ft_atoi(av[5]);
-	(*philo)->time_to_die = ft_atoi(av[3]);
-	if (ac == 6)
-		(*philo)->nb_of_meal = 0;
+	data->nb_of_philo = ft_atoi(av[1]);
+	data->time_to_eat = ft_atoi(av[3]);
+	data->time_to_sleep = ft_atoi(av[4]);
+	data->time_to_die = ft_atoi(av[2]);
+	if (ac == 5)
+		data->nb_of_meal = 0;
 	else
-		(*philo)->nb_of_meal = ft_atoi(av[6]);
-}
-
-void	simulation(char *av[], int ac)
-{
-	t_philo	*philo;
-
-	philo = NULL;
-	init_stack(&philo, av, ac);
+		data->nb_of_meal = ft_atoi(av[5]);
+	if (init_threads(philo, data) != 0)
+	{
+		ft_free(&philo, &data);
+		return ;
+	}
 }

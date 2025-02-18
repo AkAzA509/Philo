@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:43:19 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/18 11:55:30 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:43:44 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int main(int ac, char *av[])
 {
-	if (ac < 6 || ac > 7)
+	if (ac < 5 || ac > 6)
 	{
 		write(2, "Error : wrong numbers of parameters\n", 36);
 		return (0);
 	}
-	simulation(av, ac);
+	init_stack(av, ac);
 	return (0);
 }
 
