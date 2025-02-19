@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:43:19 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/18 15:43:44 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:25:35 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@ int main(int ac, char *av[])
 	init_stack(av, ac);
 	return (0);
 }
-
-// 1 verifier si on a l'arguemnt optionnel
-// 2 cree les threads
-// 3 commencer la simulation
-// 4 ??????
-
 
 // les parametre a prendre : 1 nb de treads (autant de fourchette que de threads)
 //                           2 le temps qui met a mourrir s'il ne mange pas en ms
