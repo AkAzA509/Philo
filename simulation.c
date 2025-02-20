@@ -6,48 +6,39 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 10:45:07 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/19 16:57:05 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:41:01 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	infinit_sim(t_philo *philo, int id)
+/* static void	infinit_sim(t_philo *philo, int id)
 {
-	// while (1)
-	// {
 	if (id == 0)
 	{
-		if (take_fork(philo, 1, id) == false)
-			think(philo);
-		else
+		if (take_fork(philo, 0, id) != false)
 			go_sleep(philo);
 	}
 	else
 	{
-		if (take_fork(philo, 0, id) == false)
-			think(philo);
-		else
+		if (take_fork(philo, 1, id) != false)
 			go_sleep(philo);
 	}
-	//}
-}
+} */
 
 static void	definit_sim(t_philo *philo, int id)
 {
 	if (id == 0)
 	{
-		if (take_fork(philo, 1, id) == false)
+		while (take_fork_first(philo, id) == false)
 			think(philo);
-		else
-			go_sleep(philo);
+		go_sleep(philo);
 	}
 	else
 	{
-		if (take_fork(philo, 0, id) == false)
+		while (take_fork_other(philo, id) == false)
 			think(philo);
-		else
-			go_sleep(philo);
+		go_sleep(philo);
 	}
 }
 
@@ -56,16 +47,10 @@ void	*simulation(void *thread)
 	t_philo	*philo;
 
 	philo = (t_philo *)thread;
-	if (philo->data->nb_of_meal == 0)
-		while (1)
-			infinit_sim(philo, philo->id);
-	else
+	while (philo->meal_take <= philo->data->nb_of_meal)
 	{
-		while (philo->data->nb_of_meal >= 0)
-		{
-			definit_sim(philo, philo->id);
-			philo->data->nb_of_meal--;
-		}
+		//printf("%d nb pf meal\n", philo->meal_take);
+		definit_sim(philo, philo->id);
 	}
 	return (NULL);
 }
@@ -77,6 +62,7 @@ static int	launch_simulation(t_philo *philo, t_data *data, int i)
 		philo[i].id = i;
 		philo[i].last_eat = 0;
 		philo[i].data = data;
+		philo[i].meal_take = 0;
 		data->fork_state[i] = 0;
 		if (pthread_mutex_init(data->fork[i], NULL) != 0
 			|| pthread_create(&philo[i].threads, NULL, simulation,
