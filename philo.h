@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:30:48 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/20 17:48:33 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:55:31 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,23 @@ typedef struct s_philo
 	struct s_data	*data;
 	pthread_t		threads;
 	int				id;
-	long			last_eat;	
+	long			last_eat;
 	int				meal_take;
 }					t_philo;
 
 typedef struct s_data
 {
 	pthread_mutex_t	**fork;
+	pthread_mutex_t	dead_lock;
+	int				is_dead;
 	int				*fork_state;
 	int				nb_of_philo;
 	int				time_to_eat;
 	int				time_to_sleep;
-	long				time_to_die;
+	long			time_to_die;
 	int				nb_of_meal;
 	long			start_time;
-	//int				current_time;
+	struct s_philo	*philo;
  }					t_data;
 
 //---------------[ Util$]-----------------//
