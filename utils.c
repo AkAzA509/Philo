@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 10:49:45 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/21 14:32:51 by ggirault         ###   ########.fr       */
+/*   Created: 2025/02/24 11:14:28 by ggirault          #+#    #+#             */
+/*   Updated: 2025/02/24 15:31:31 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,34 +33,61 @@ int	ft_atoi(char *str)
 	return (res);	
 }
 
-void	ft_free(t_philo **philo, t_data **data)
-{
-	int	i;
-
-	i = 0;
-	if(*data)
-	{
-		while(i < (*data)->nb_of_philo)
-		{
-			free((*data)->fork[i]);
-			i++;
-		}
-		free((*data)->fork);
-		free((*data)->fork_state);
-		free(*data);
-		*data = NULL;
-	}
-	if (*philo)
-	{
-		free(*philo);
-		*philo = NULL;
-	}
-}
-
 long	get_time()
 {
 	struct timeval tv;
 	
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	print_data(char *str, t_philo *philo)
+{
+	long	current_t;
+
+	current_t = get_time();
+	pthread_mutex_lock(&philo->data->start_t_m);
+	printf("%ld ms %d %s\n",current_t - philo->data->start_t, philo->id, str);
+	pthread_mutex_unlock(&philo->data->start_t_m);
+}
+
+void	ft_free(t_philo *philo, t_data *data)
+{
+	int	i;
+
+	i = 0;
+
+	if(data)
+	{
+		pthread_mutex_destroy(&data->is_dead_m);
+		pthread_mutex_destroy(&data->start_t_m);
+		pthread_mutex_destroy(&data->meal_max_m);
+		free(data->fork);
+		free(data);
+		data = NULL;
+	}
+	if (philo)
+	{
+		free(philo);
+		philo = NULL;
+	}
+}
+
+bool	check_thread(t_philo *philo)
+{
+	long	current_time;
+
+	current_time = get_time();
+	if ((current_time - philo->last_eat) >= philo->data->die_t)
+	{
+		pthread_mutex_lock(&philo->data->is_dead_m);
+		if (philo->data->is_dead == 0)
+		{
+			philo->data->is_dead = 1;
+			print_data("died", philo);
+		}
+		pthread_mutex_unlock(&philo->data->is_dead_m);
+		return (false);
+	}
+	return (true);
 }

@@ -5,84 +5,53 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 11:10:28 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/21 11:17:47 by ggirault         ###   ########.fr       */
+/*   Created: 2025/02/24 13:08:17 by ggirault          #+#    #+#             */
+/*   Updated: 2025/02/24 15:29:20 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	go_sleep(t_philo *philo)
-{
-	printf("%ld %d is sleeping\n", get_time(), philo->id);
-	usleep(philo->data->time_to_sleep * 1000);
-}
-
 void	think(t_philo *philo)
 {
-	printf("%ld %d is thinking\n", get_time(), philo->id);
-	usleep(50000);
+	print_data("is thinking", philo);
+	usleep(2000);
 }
 
-bool	take_fork_first(t_philo *philo, int i)
+void	eat(t_philo *philo, int i)
 {
-	if (philo->data->fork_state[i] == 0 && philo->data->fork_state[i
-		+ philo->data->nb_of_philo - 1] == 0)
+	if (i % 2 == 0)
 	{
-		pthread_mutex_lock(philo->data->fork[i + philo->data->nb_of_philo - 1]);
-		pthread_mutex_lock(philo->data->fork[i]);
-		philo->data->fork_state[i + philo->data->nb_of_philo - 1] = 1;
-		philo->data->fork_state[i] = 1;
-		printf("%ld %d has taken a fork\n", get_time(), philo->id);
-		usleep(philo->data->time_to_eat * 1000);
-		philo->last_eat = get_time();
-		philo->data->fork_state[i + philo->data->nb_of_philo - 1] = 0;
-		philo->data->fork_state[i] = 0;
-		pthread_mutex_unlock(philo->data->fork[i + philo->data->nb_of_philo
-			- 1]);
-		pthread_mutex_unlock(philo->data->fork[i]);
-		philo->meal_take += 1;
-		return (true);
+		printf("----------try to lock fork %d---------\n", philo->id);
+		pthread_mutex_lock(&philo->left_f);
+		pthread_mutex_lock(&philo->right_f);
 	}
-	return (false);
+	else
+	{
+		printf("----------try to lock fork %d---------\n", philo->id);
+		pthread_mutex_lock(&philo->right_f);
+		pthread_mutex_lock(&philo->left_f);
+	}
+	print_data("has taken a fork", philo);
+	print_data("has taken a fork", philo);
+	print_data("is eating", philo);
+	usleep(philo->data->eat_t * 1000);
+	philo->last_eat = get_time();
+	if (i % 2 == 0)
+	{
+		pthread_mutex_unlock(&philo->right_f);
+		pthread_mutex_unlock(&philo->left_f);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->left_f);
+		pthread_mutex_unlock(&philo->right_f);
+	}
+	philo->meal_take += 1;
 }
 
-bool	take_fork_other(t_philo *philo, int i)
+void	sleeping(t_philo *philo)
 {
-	if (philo->data->fork_state[i] == 0 && philo->data->fork_state[i - 1] == 0)
-	{
-		pthread_mutex_lock(philo->data->fork[i - 1]);
-		pthread_mutex_lock(philo->data->fork[i]);
-		philo->data->fork_state[i - 1] = 1;
-		philo->data->fork_state[i] = 1;
-		printf("%ld %d has taken a fork\n", get_time(), philo->id);
-		usleep(philo->data->time_to_eat * 1000);
-		philo->last_eat = get_time();
-		philo->data->fork_state[i - 1] = 0;
-		philo->data->fork_state[i] = 0;
-		pthread_mutex_unlock(philo->data->fork[i - 1]);
-		pthread_mutex_unlock(philo->data->fork[i]);
-		philo->meal_take += 1;
-		return (true);
-	}
-	return (false);
-}
-
-bool	is_dead(t_philo *philo)
-{
-	long	current_time;
-
-	current_time = get_time();
-	if ((current_time - philo->last_eat) >= philo->data->time_to_die)
-	{
-		pthread_mutex_lock(&philo->data->dead_lock);
-		if (philo->data->is_dead == 0)
-		{
-			philo->data->is_dead = 1;
-			printf("%ld %d died\n", current_time, philo->id);
-		}
-		pthread_mutex_unlock(&philo->data->dead_lock);
-		return (false);
-	}
-	return (true);
+	print_data("is sleeping", philo);
+	usleep(philo->data->sleep_t * 1000);
 }

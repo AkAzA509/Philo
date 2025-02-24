@@ -6,7 +6,7 @@
 #    By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 11:22:10 by ggirault          #+#    #+#              #
-#    Updated: 2025/02/21 15:07:19 by ggirault         ###   ########.fr        #
+#    Updated: 2025/02/24 13:43:19 by ggirault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=address
 
 OBJ_DIR = obj/
 
-SRCS = main.c simulation.c routine.c utils.c
+SRCS = main.c sim.c routine.c utils.c init_struct.c
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR)%.o)
 
