@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 11:09:02 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/24 15:31:45 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:24:25 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static void	init_philo(t_philo *philo, t_data *data, pthread_t monitoring_t, int
 		philo[i].data = data;
 		philo[i].id = i;
 		philo[i].last_eat = data->start_t;
-		philo[i].left_f = data->fork[i];
-		philo[i].right_f = data->fork[(i + 1) % data->nb_philo];
+		philo[i].left_f = &data->fork[i];
+		philo[i].right_f = &data->fork[(i + 1) % data->nb_philo];
 		philo[i].meal_take = 0;
 		if (pthread_create(&philo[i].thread, NULL, start_sim, &philo[i]) != 0)
 			return ;

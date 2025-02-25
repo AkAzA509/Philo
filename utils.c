@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 11:14:28 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/25 11:40:26 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/25 16:14:36 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	print_data(char *str, t_philo *philo)
 
 	current_t = get_time();
 	pthread_mutex_lock(&philo->data->start_t_m);
-	printf("%ld ms %d %s\n",current_t - philo->data->start_t, philo->id, str);
+	printf("%ld %d %s\n",current_t - philo->data->start_t, philo->id, str);
 	pthread_mutex_unlock(&philo->data->start_t_m);
 }
 
@@ -74,8 +74,9 @@ bool	check_thread(t_philo *philo)
 	long	current_time;
 
 	current_time = get_time();
-	if ((current_time - philo->last_eat) >= philo->data->die_t)
+	if ((philo->last_eat - current_time) >= philo->data->die_t)
 	{
+	//	printf("verify death%d = %ld\n", philo->id, philo->last_eat - current_time);
 		pthread_mutex_lock(&philo->data->is_dead_m);
 		if (philo->data->is_dead == 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:58:30 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/24 13:56:15 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:23:48 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 typedef struct s_philo
 {
-	pthread_mutex_t	left_f;
-	pthread_mutex_t	right_f;
+	pthread_mutex_t	*left_f;
+	pthread_mutex_t	*right_f;
 	struct s_data	*data;
 	pthread_t		thread;
 	long			last_eat;
