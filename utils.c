@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 11:14:28 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/24 15:31:31 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:40:26 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,6 @@ void	print_data(char *str, t_philo *philo)
 
 void	ft_free(t_philo *philo, t_data *data)
 {
-	int	i;
-
-	i = 0;
-
 	if(data)
 	{
 		pthread_mutex_destroy(&data->is_dead_m);

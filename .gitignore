@@ -2,4 +2,5 @@ a.out
 philo
 philo.pdf
 *.o
+obj/
 .vscode
