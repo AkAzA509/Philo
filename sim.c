@@ -6,13 +6,13 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:39:49 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/25 16:14:55 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:09:01 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static bool someone_dead(t_philo *philo)
+bool	someone_dead(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->is_dead_m);
 	if (philo->data->is_dead == 1)
@@ -24,67 +24,56 @@ static bool someone_dead(t_philo *philo)
 	return (false);
 }
 
-static void limited_sim(t_philo *philo)
+static void	limited_sim(t_philo *philo)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	pthread_mutex_lock(&philo->data->meal_max_m);
-	while (i <= philo->data->meal_max)
+	while (1)
 	{
+		pthread_mutex_lock(&philo->data->meal_max_m);
+		if (i == philo->data->meal_max)
+		{
+			pthread_mutex_unlock(&philo->data->meal_max_m);
+			break ;
+		}
 		pthread_mutex_unlock(&philo->data->meal_max_m);
 		if (someone_dead(philo))
-			return;
+			return ;
 		think(philo);
 		if (someone_dead(philo))
-			return;
+			return ;
 		eat(philo, philo->id);
 		if (someone_dead(philo))
-			return;
+			return ;
 		sleeping(philo);
 		if (someone_dead(philo))
-			return;
+			return ;
 		i++;
 	}
 }
 
-static void unlimited_sim(t_philo *philo)
+static void	unlimited_sim(t_philo *philo)
 {
 	while (1)
 	{
-		//printf("Philo %d: début de cycle\n", philo->id);
-
 		if (someone_dead(philo))
-		{
-			//printf("Philo %d: quelqu'un est mort au début\n", philo->id);
 			return ;
-		}
-		//printf("Philo %d: commence à penser\n", philo->id);
 		think(philo);
-		//print_data(": a fini de penser", philo);
 		if (someone_dead(philo))
-		{
-		//	printf("Philo %d: quelqu'un est mort après penser\n", philo->id);
 			return ;
-		}
-		//printf("Philo %d: commence à manger\n", philo->id);
 		eat(philo, philo->id);
-		//print_data(": a fini de manger\n", philo);
 		if (someone_dead(philo))
-		{
-		//	printf("Philo %d: quelqu'un est mort après manger\n", philo->id);
 			return ;
-		}
-		//printf("Philo %d: commence à dormir\n", philo->id);
 		sleeping(philo);
-		//printf("Philo %d: a fini de dormir\n", philo->id);
-		//printf("Philo %d: fin de cycle\n", philo->id);
+		if (someone_dead(philo))
+			return ;
 	}
 }
 
-void *start_sim(void *arg)
+void	*start_sim(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(&philo->data->meal_max_m);
@@ -94,14 +83,17 @@ void *start_sim(void *arg)
 		unlimited_sim(philo);
 	}
 	else
+	{
+		pthread_mutex_unlock(&philo->data->meal_max_m);
 		limited_sim(philo);
+	}
 	return (NULL);
 }
 
-void *monitoring(void *arg)
+void	*monitoring(void *arg)
 {
-	t_data *data;
-	int i;
+	t_data	*data;
+	int		i;
 
 	i = 0;
 	data = (t_data *)arg;
@@ -110,7 +102,9 @@ void *monitoring(void *arg)
 		while (i < data->nb_philo)
 		{
 			if (check_thread(&data->philo[i]) == false)
+			{
 				return (NULL);
+			}
 			i++;
 		}
 		i = 0;

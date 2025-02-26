@@ -6,13 +6,13 @@
 #    By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/20 11:22:10 by ggirault          #+#    #+#              #
-#    Updated: 2025/02/24 13:43:19 by ggirault         ###   ########.fr        #
+#    Updated: 2025/02/26 15:32:46 by ggirault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -pthread -fsanitize=thread #-fsanitize=address
 
 OBJ_DIR = obj/
 

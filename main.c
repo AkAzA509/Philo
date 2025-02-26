@@ -6,13 +6,13 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:43:19 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/24 10:57:07 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:09:18 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int main(int ac, char *av[])
+int	main(int ac, char *av[])
 {
 	if (ac < 5 || ac > 6)
 	{
