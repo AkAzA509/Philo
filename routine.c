@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:08:17 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/26 15:09:56 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/27 16:20:32 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ static void	go_eat(t_philo *philo)
 
 void	eat(t_philo *philo, int i)
 {
-	if (someone_dead(philo))
-		return ;
 	if (i % 2 == 0)
 	{
 		pthread_mutex_lock(philo->left_f);
@@ -43,7 +41,8 @@ void	eat(t_philo *philo, int i)
 		pthread_mutex_lock(philo->right_f);
 		pthread_mutex_lock(philo->left_f);
 	}
-	go_eat(philo);
+	if (someone_dead(philo) == false)
+		go_eat(philo);
 	if (i % 2 == 0)
 	{
 		pthread_mutex_unlock(philo->right_f);

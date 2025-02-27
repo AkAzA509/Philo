@@ -6,11 +6,31 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 11:09:02 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/26 15:12:29 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/27 16:42:16 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	destroy_mutex(t_data *data, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		pthread_join(philo[i].thread, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		pthread_mutex_lock(&data->fork[i]);
+		pthread_mutex_unlock(&data->fork[i]);
+		pthread_mutex_destroy(&data->fork[i]);
+		i++;
+	}
+}
 
 static void	init_philo(t_philo *philo, t_data *data, pthread_t monitoring_t,
 		int i)
@@ -32,13 +52,7 @@ static void	init_philo(t_philo *philo, t_data *data, pthread_t monitoring_t,
 	}
 	pthread_create(&monitoring_t, NULL, monitoring, data);
 	pthread_join(monitoring_t, NULL);
-	i = 0;
-	while (i < data->nb_philo)
-	{
-		pthread_join(philo[i].thread, NULL);
-		pthread_mutex_destroy(&data->fork[i]);
-		i++;
-	}
+	destroy_mutex(data, philo);
 	ft_free(philo, data);
 }
 
