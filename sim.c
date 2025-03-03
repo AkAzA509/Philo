@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:39:49 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/26 15:09:01 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/28 12:56:36 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,20 @@ void	*monitoring(void *arg)
 	{
 		while (i < data->nb_philo)
 		{
-			if (check_thread(&data->philo[i]) == false)
+			pthread_mutex_lock(&data->meal_max_m);
+			pthread_mutex_lock(&data->philo[i].mael_take_m);
+			if (check_thread(&data->philo[i]) == false || (data->meal_max != 0
+					&& data->philo[i].meal_take == data->meal_max))
 			{
+				pthread_mutex_unlock(&data->philo[i].mael_take_m);
+				pthread_mutex_unlock(&data->meal_max_m);
 				return (NULL);
 			}
+			pthread_mutex_unlock(&data->philo[i].mael_take_m);
+			pthread_mutex_unlock(&data->meal_max_m);
 			i++;
 		}
 		i = 0;
-		usleep(2000);
 	}
 	return (NULL);
 }

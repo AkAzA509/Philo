@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 11:09:02 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/27 16:42:16 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/28 12:54:20 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	destroy_mutex(t_data *data, t_philo *philo)
 		pthread_mutex_lock(&data->fork[i]);
 		pthread_mutex_unlock(&data->fork[i]);
 		pthread_mutex_destroy(&data->fork[i]);
+		pthread_mutex_destroy(&philo[i].mael_take_m);
 		i++;
 	}
 }
@@ -46,6 +47,7 @@ static void	init_philo(t_philo *philo, t_data *data, pthread_t monitoring_t,
 		philo[i].right_f = &data->fork[(i + 1) % data->nb_philo];
 		philo[i].meal_take = 0;
 		pthread_mutex_init(&philo[i].last_eat_m, NULL);
+		pthread_mutex_init(&philo[i].mael_take_m, NULL);
 		if (pthread_create(&philo[i].thread, NULL, start_sim, &philo[i]) != 0)
 			return ;
 		i++;
@@ -115,5 +117,8 @@ void	init_stack(char *av[], int ac)
 		ft_free(philo, data);
 		return ;
 	}
-	init_philo(philo, data, monitoring, i);
+	if (data->nb_philo == 1)
+		launch_one_philo(philo, data);
+	else
+		init_philo(philo, data, monitoring, i);
 }

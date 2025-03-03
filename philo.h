@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:58:30 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/26 15:09:28 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:01:04 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	last_eat_m;
 	long			last_eat;
+	pthread_mutex_t	mael_take_m;
 	int				meal_take;
 	int				id;
 }					t_philo;
@@ -61,5 +62,6 @@ void				*start_sim(void *arg);
 bool				check_thread(t_philo *philo);
 void				ft_free(t_philo *philo, t_data *data);
 bool				someone_dead(t_philo *philo);
+void				launch_one_philo(t_philo *philo, t_data *data);
 
 #endif

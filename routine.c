@@ -6,7 +6,7 @@
 /*   By: ggirault <ggirault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:08:17 by ggirault          #+#    #+#             */
-/*   Updated: 2025/02/27 16:20:32 by ggirault         ###   ########.fr       */
+/*   Updated: 2025/02/28 12:57:48 by ggirault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ void	eat(t_philo *philo, int i)
 		pthread_mutex_unlock(philo->left_f);
 		pthread_mutex_unlock(philo->right_f);
 	}
+	pthread_mutex_lock(&philo->mael_take_m);
 	philo->meal_take += 1;
+	pthread_mutex_unlock(&philo->mael_take_m);
 }
 
 void	sleeping(t_philo *philo)
